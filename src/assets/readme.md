@@ -1,0 +1,10 @@
+# `assets/` – Static Files & Media
+
+This folder contains static resources such as:
+
+- Images
+- Fonts
+- Icons
+- Global SCSS/CSS files
+
+Use this for anything that doesn't contain logic, just visual or media assets.

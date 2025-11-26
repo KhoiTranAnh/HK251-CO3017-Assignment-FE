@@ -1,0 +1,3 @@
+# `components/` – Shared UI Components
+
+This is for reusable components like buttons, modals, inputs, etc., that are used across multiple parts of your app.
