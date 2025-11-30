@@ -1,7 +1,9 @@
+import { FrontPage } from "./pages/FrontPage/FrontPage";
+
 function App() {
   return (
     <div className="App">
-      <p className="text-2xl text-blue-800">Hello worlds</p>
+      <FrontPage />
     </div>
   );
 }
