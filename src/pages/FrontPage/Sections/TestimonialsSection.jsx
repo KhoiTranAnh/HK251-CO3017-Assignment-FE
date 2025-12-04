@@ -32,7 +32,7 @@ export const TestimonialsSection = () => {
     ];
 
     return (
-        <section className="flex flex-col w-full items-start gap-5 px-0 py-[30px] relative flex-[0_0_auto] bg-white">
+        <section className="flex flex-col grow-0 shrink-0 w-full items-start gap-5 px-0 py-[30px] relative flex-[0_0_auto] bg-white">
             <header className="flex flex-col items-center gap-5 relative self-stretch w-full flex-[0_0_auto]">
                 <h2 className="relative w-fit font-h3 text-3xl font-bold text-black">
                     Xem những người khác đang đạt được gì thông qua học tập
@@ -42,8 +42,8 @@ export const TestimonialsSection = () => {
             <div className="flex flex-row justify-center gap-[30px] p-2.5 relative self-stretch w-full">
                 {/* {testimonialsData.map((testimonial) => { <TestimonialCard key={testimonial.id} rating={testimonial.rating} comment={testimonial.comment} studentCourse={testimonial.course} studentName={testimonial.name} /> })} */}
                 <TestimonialCard key={testimonialsData[0].id} rating={testimonialsData[0].rating} comment={testimonialsData[0].comment} studentCourse={testimonialsData[0].course} studentName={testimonialsData[0].name} />
-                <TestimonialCard key={testimonialsData[0].id} rating={testimonialsData[0].rating} comment={testimonialsData[0].comment} studentCourse={testimonialsData[0].course} studentName={testimonialsData[0].name} />
-                <TestimonialCard key={testimonialsData[0].id} rating={testimonialsData[0].rating} comment={testimonialsData[0].comment} studentCourse={testimonialsData[0].course} studentName={testimonialsData[0].name} />
+                <TestimonialCard key={testimonialsData[1].id} rating={testimonialsData[1].rating} comment={testimonialsData[1].comment} studentCourse={testimonialsData[1].course} studentName={testimonialsData[1].name} />
+                <TestimonialCard key={testimonialsData[2].id} rating={testimonialsData[2].rating} comment={testimonialsData[2].comment} studentCourse={testimonialsData[2].course} studentName={testimonialsData[2].name} />
             </div>
         </section>
     );

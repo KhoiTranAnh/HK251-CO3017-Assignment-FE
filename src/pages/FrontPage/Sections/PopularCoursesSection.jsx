@@ -4,7 +4,7 @@ import { PopularCourseCard } from "../../../components/PopularCourseCard/Popular
 
 export const PopularCoursesSection = () => {
     return (
-        <section className="flex flex-col w-full items-start gap-5 px-0 py-[30px] relative flex-[0_0_auto] bg-gray-50">
+        <section className="flex grow-0 shrink-0 flex-col w-full items-start gap-5 px-0 py-[30px] relative flex-[0_0_auto] bg-gray-50">
             <header className="flex flex-col items-center gap-5 relative self-stretch w-full flex-[0_0_auto]">
                 <h2 className="relative w-fit font-h3 text-3xl font-bold text-black">
                     Các khóa học phổ biến

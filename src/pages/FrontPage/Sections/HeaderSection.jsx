@@ -80,9 +80,9 @@ import { Button } from "../../../components/Button/Button";
 //     );
 // };
 
-export const HeaderSection = () => {
+export const HeaderSection = ({ handleLoginButtonClick, handleSignUpButtonClick }) => {
     return (
-        <header className="flex flex-row h-[70px] w-full items-center px-5 py-2 justify-between ">
+        <header className="flex flex-row h-[70px] w-full items-center px-5 py-2 justify-between grow-0 shrink-0">
             <div className="header-left flex flex-row h-fit w-fit gap-2 ">
                 <Logo />
                 <Button variant='ghost' label='Khám phá' />
@@ -90,8 +90,8 @@ export const HeaderSection = () => {
                 <Button variant='ghost' label='Liên hệ' />
             </div>
             <div className="header-right flex flex-row h-fit w-fit gap-2">
-                <Button variant='ghost' label='Đăng nhập' />
-                <Button variant='primary' label='Đăng ký' />
+                <Button variant='ghost' label='Đăng nhập' onClick={() => handleLoginButtonClick()} />
+                <Button variant='primary' label='Đăng ký' onClick={() => handleSignUpButtonClick()} />
             </div>
         </header>
     )
