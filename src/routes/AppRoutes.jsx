@@ -6,7 +6,7 @@ import { FrontPage } from "../pages/FrontPage/FrontPage";
 const InstructorDashboard = React.lazy(() =>
   import("../pages/Instructor/Dashboard/InstructorDashboard")
 );
-const CourseDetail = React.lazy(() =>
+const InstructorCourseDetail = React.lazy(() =>
   import("../pages/Instructor/CourseDetail/CourseDetail")
 );
 const InstructorLayout = React.lazy(() =>
@@ -14,6 +14,12 @@ const InstructorLayout = React.lazy(() =>
 );
 const QuizWizard = React.lazy(() =>
   import("../pages/Instructor/Quiz/QuizWizard")
+);
+const StudentDashboard = React.lazy(() =>
+  import("../pages/Dashboard/Dashboard")
+);
+const StudentCourseDetail = React.lazy(() =>
+  import("../pages/CourseDetail/CourseDetail")
 );
 
 export const AppRoutes = () => {
@@ -26,13 +32,17 @@ export const AppRoutes = () => {
         <Route path="/instructor" element={<InstructorLayout />}>
           <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<InstructorDashboard />} />
-          <Route path="courses/:courseId" element={<CourseDetail />} />
-          <Route
-            path="courses/:courseId/quiz/new"
-            element={<QuizWizard />}
-          />{" "}
-          {/* New Route */}
+          <Route path="courses/:courseId" element={<InstructorCourseDetail />} />
+          <Route path="courses/:courseId/quiz/new" element={<QuizWizard />} />
         </Route>
+
+        <Route path="/student" element={<StudentDashboard />}>
+          <Route path="dashboard" element={<StudentDashboard />} />
+        </Route>
+
+        <Route path="/student/courses/:courseId" element={<StudentCourseDetail />} />
+        <Route path="/student/courses/:courseId/:tab" element={<StudentCourseDetail />} />
+
 
         <Route path="*" element={<div>404 Not Found</div>} />
       </Routes>

@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from 'react-router-dom';
 import { Logo } from "../../../components/Logo/Logo";
 import { Button } from "../../../components/Button/Button";
 
@@ -86,6 +87,9 @@ export const HeaderSection = () => {
             <div className="header-left flex flex-row h-fit w-fit gap-2 ">
                 <Logo />
                 <Button variant='ghost' label='Khám phá' />
+                <Button variant='ghost' label='Dashboard' />
+                {/* <Link to="/dashboard">
+                </Link> */}
                 <Button variant='ghost' label='Về chúng tôi' />
                 <Button variant='ghost' label='Liên hệ' />
             </div>
