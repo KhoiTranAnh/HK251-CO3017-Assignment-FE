@@ -75,6 +75,8 @@ export const LectureModal = ({
       }));
       setShowLinkInput(false);
     }
+
+    console.log(formData);
   };
 
   // Mock File Upload
@@ -98,11 +100,13 @@ export const LectureModal = ({
       return;
     }
 
+    console.log(chapterId)
+
     onSave(chapterId, {
       ...initialData,
       title: formData.title,
       // In a real app, we'd handle file upload here
-      resource: formData.mainMaterial ? "updated_resource_url" : null,
+      resource: formData.mainMaterial ? formData.mainMaterial.name : null
     });
   };
 
@@ -138,16 +142,15 @@ export const LectureModal = ({
                 value={formData.title}
                 onChange={handleInputChange}
                 placeholder="Nhập tên bài giảng"
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  errors.title ? "border-red-500" : "border-gray-300"
-                }`}
+                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.title ? "border-red-500" : "border-gray-300"
+                  }`}
               />
               {errors.title && (
                 <p className="text-red-500 text-xs mt-1">{errors.title}</p>
               )}
             </div>
 
-            <div>
+            {/* <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Mô tả ngắn cho bài giảng
               </label>
@@ -159,7 +162,7 @@ export const LectureModal = ({
                 placeholder="Nhập mô tả ngắn cho bài giảng"
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-            </div>
+            </div> */}
           </div>
 
           {/* File Upload Section */}

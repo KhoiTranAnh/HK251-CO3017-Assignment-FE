@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { courseService } from "../../../services/mock/courseService";
 import { CourseCard } from "../../../components/CourseCard/CourseCard";
+import { instructorService } from "../../../services/instructorService";
 import Pagination from "@mui/material/Pagination";
 import SearchIcon from "@mui/icons-material/Search";
 
@@ -13,7 +14,7 @@ const InstructorDashboard = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const data = await courseService.getCourses();
+        const data = await instructorService.getCourses();
         setCourses(data);
       } catch (error) {
         console.error("Failed to fetch courses", error);

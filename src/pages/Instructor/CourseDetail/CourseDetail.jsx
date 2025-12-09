@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { courseService } from "../../../services/mock/courseService";
+import { instructorService } from "../../../services/instructorService";
 import { Breadcrumbs } from "../../../components/Breadcrumbs/Breadcrumbs";
 import { LectureModal } from "../../../components/Modal/LectureModal";
 
@@ -48,13 +49,15 @@ const CourseDetail = () => {
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        const data = await courseService.getCourseById(courseId);
+        const data = await instructorService.getCourseById(courseId);
+        const courseChapter = await instructorService.getChapterInCourseId(courseId);
         if (data) {
           setCourse(data);
-          setChapters(data.chapters || []);
+          setChapters(courseChapter);
           // Expand all by default
           const expanded = {};
-          (data.chapters || []).forEach((c) => (expanded[c.chapter_id] = true));
+          // console.log(courseChapter);
+          courseChapter.forEach((c) => (expanded[c.chapterId] = true));
           setExpandedChapters(expanded);
         }
       } catch (error) {
@@ -74,14 +77,14 @@ const CourseDetail = () => {
 
   const handleAddChapter = async () => {
     try {
-      const newChapter = await courseService.addChapter(courseId, {
+      const newChapter = await instructorService.addChapterToCourseId(courseId, {
         title: "New Chapter",
         status: "Published",
       });
       setChapters([...chapters, newChapter]);
       setExpandedChapters((prev) => ({
         ...prev,
-        [newChapter.chapter_id]: true,
+        [newChapter.chapterId]: true,
       }));
     } catch (error) {
       console.error(error);
@@ -90,18 +93,16 @@ const CourseDetail = () => {
 
   // Edit Chapter Name
   const startEditChapter = (chapter) => {
-    setEditingChapterId(chapter.chapter_id);
+    setEditingChapterId(chapter.chapterId);
     setEditChapterTitle(chapter.title);
   };
 
   const saveEditChapter = async () => {
     try {
-      await courseService.updateChapter(courseId, editingChapterId, {
-        title: editChapterTitle,
-      });
+      await instructorService.editChapterInCourseId(courseId, editingChapterId, editChapterTitle);
       setChapters((prev) =>
         prev.map((c) =>
-          c.chapter_id === editingChapterId
+          c.chapterId === editingChapterId
             ? { ...c, title: editChapterTitle }
             : c
         )
@@ -115,26 +116,16 @@ const CourseDetail = () => {
   // Delete Chapter
   const confirmDeleteChapter = async () => {
     if (!deleteChapterId) return;
+
+    await instructorService.deleteChapterId(deleteChapterId);
     // Mock delete - locally remove
-    setChapters((prev) => prev.filter((c) => c.chapter_id !== deleteChapterId));
+    setChapters((prev) => prev.filter((c) => c.chapterId !== deleteChapterId));
     setDeleteChapterId(null);
   };
 
   // Status Toggle
   const changeStatus = async (chapterId, newStatus) => {
-    try {
-      await courseService.updateChapter(courseId, chapterId, {
-        status: newStatus,
-      });
-      setChapters((prev) =>
-        prev.map((c) =>
-          c.chapter_id === chapterId ? { ...c, status: newStatus } : c
-        )
-      );
-      setStatusDropdownId(null);
-    } catch (e) {
-      console.error(e);
-    }
+
   };
 
   // Lesson Handlers
@@ -170,7 +161,7 @@ const CourseDetail = () => {
         // Mock delete
         setChapters((prev) =>
           prev.map((c) => {
-            if (c.chapter_id !== chapterId) return c;
+            if (c.chapterId !== chapterId) return c;
             return {
               ...c,
               lessons: c.lessons.filter((l) => l.lesson_id !== lessonId),
@@ -178,6 +169,12 @@ const CourseDetail = () => {
           })
         );
         // In real app, call API
+        instructorService.deleteLesson(lessonId)
+        // Refresh data
+        // const data = await courseService.getCourseById(courseId);
+        const courseChapter = await instructorService.getChapterInCourseId(courseId);
+        setChapters(courseChapter);
+        setModalOpen(false);
         // await courseService.deleteLesson(chapterId, lessonId);
       } catch (e) {
         console.error(e);
@@ -187,25 +184,31 @@ const CourseDetail = () => {
 
   const handleSaveLesson = async (chapterId, lessonData) => {
     try {
+
+      console.log(lessonData);
       if (editingLesson) {
         // UPDATE
-        await courseService.updateLesson(chapterId, editingLesson.lesson_id, {
-          title: lessonData.title,
-          resource: lessonData.resource,
-          supplementaryMaterial: lessonData.supplementaryMaterial, // Ensure this is passed
-        });
+        console.log(editingLesson)
+        await instructorService.updateLessonInChapterId(chapterId, lessonData, editingLesson.lessonId)
+        // await courseService.updateLesson(chapterId, editingLesson.lesson_id, {
+        //   title: lessonData.title,
+        //   resource: lessonData.resource,
+        //   supplementaryMaterial: lessonData.supplementaryMaterial, // Ensure this is passed
+        // });
       } else {
         // ADD
-        await courseService.addLesson(chapterId, {
-          title: lessonData.title,
-          duration: "0m",
-          type: "video",
-          supplementaryMaterial: lessonData.supplementaryMaterial, // Ensure this is passed
-        });
+        await instructorService.addLessonToChapterId(chapterId, lessonData)
+        // await courseService.addLesson(chapterId, {
+        //   title: lessonData.title,
+        //   duration: "0m",
+        //   type: "video",
+        //   supplementaryMaterial: lessonData.supplementaryMaterial, // Ensure this is passed
+        // });
       }
       // Refresh data
-      const data = await courseService.getCourseById(courseId);
-      setChapters(data.chapters);
+      // const data = await courseService.getCourseById(courseId);
+      const courseChapter = await instructorService.getChapterInCourseId(courseId);
+      setChapters(courseChapter);
       setModalOpen(false);
     } catch (error) {
       console.error("Failed to save lesson", error);
@@ -247,7 +250,7 @@ const CourseDetail = () => {
           Cấu trúc môn học & tài liệu học tập
         </h1>
         <p className="text-gray-500 text-sm">
-          {course.title} - {course.course_id.split("-")[0]}-401
+          {course.title} - {course.course_id}-401
         </p>
       </div>
 
@@ -264,22 +267,21 @@ const CourseDetail = () => {
       <div className="space-y-4">
         {chapters.map((chapter, index) => (
           <div
-            key={chapter.chapter_id}
+            key={chapter.chapterId}
             className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm"
           >
             {/* Chapter Header */}
             <div
               className="p-4 bg-gray-50 border-b border-gray-200 flex items-center justify-between cursor-pointer"
-              onClick={() => toggleExpand(chapter.chapter_id)}
+              onClick={() => toggleExpand(chapter.chapterId)}
             >
               <div className="flex items-center gap-3">
                 <ExpandMoreIcon
-                  className={`text-gray-400 transition-transform ${
-                    expandedChapters[chapter.chapter_id] ? "" : "-rotate-90"
-                  }`}
+                  className={`text-gray-400 transition-transform ${expandedChapters[chapter.chapterId] ? "" : "-rotate-90"
+                    }`}
                 />
                 <div onClick={(e) => e.stopPropagation()}>
-                  {editingChapterId === chapter.chapter_id ? (
+                  {editingChapterId === chapter.chapterId ? (
                     <div className="flex items-center gap-2">
                       <input
                         className="border border-blue-500 rounded px-2 py-1 text-sm font-bold text-gray-800"
@@ -312,7 +314,7 @@ const CourseDetail = () => {
                         <EditIcon fontSize="small" style={{ fontSize: 18 }} />
                       </button>
                       <button
-                        onClick={() => setDeleteChapterId(chapter.chapter_id)}
+                        onClick={() => setDeleteChapterId(chapter.chapterId)}
                         className="text-gray-400 hover:text-red-600"
                       >
                         <DeleteIcon fontSize="small" style={{ fontSize: 18 }} />
@@ -334,17 +336,16 @@ const CourseDetail = () => {
                 <button
                   onClick={() =>
                     setStatusDropdownId(
-                      statusDropdownId === chapter.chapter_id
+                      statusDropdownId === chapter.chapterId
                         ? null
-                        : chapter.chapter_id
+                        : chapter.chapterId
                     )
                   }
                   className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold
-                                        ${
-                                          chapter.status === "Draft"
-                                            ? "bg-gray-200 text-gray-700"
-                                            : "bg-green-100 text-green-700"
-                                        }
+                                        ${chapter.status === "Draft"
+                      ? "bg-gray-200 text-gray-700"
+                      : "bg-green-100 text-green-700"
+                    }
                                     `}
                 >
                   {chapter.status === "Draft" ? (
@@ -359,18 +360,18 @@ const CourseDetail = () => {
                   <ExpandMoreIcon style={{ fontSize: 16 }} />
                 </button>
 
-                {statusDropdownId === chapter.chapter_id && (
+                {statusDropdownId === chapter.chapterId && (
                   <div className="absolute top-full right-0 mt-2 w-32 bg-white rounded-lg shadow-xl border border-gray-100 z-10 py-1">
                     <button
                       onClick={() =>
-                        changeStatus(chapter.chapter_id, "Published")
+                        changeStatus(chapter.chapterId, "Published")
                       }
                       className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50 flex items-center gap-2 text-green-700"
                     >
                       <VisibilityIcon fontSize="small" /> Công khai
                     </button>
                     <button
-                      onClick={() => changeStatus(chapter.chapter_id, "Draft")}
+                      onClick={() => changeStatus(chapter.chapterId, "Draft")}
                       className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50 flex items-center gap-2 text-gray-700"
                     >
                       <VisibilityOffIcon fontSize="small" /> Riêng tư
@@ -381,7 +382,7 @@ const CourseDetail = () => {
             </div>
 
             {/* Lessons List */}
-            {expandedChapters[chapter.chapter_id] && (
+            {expandedChapters[chapter.chapterId] && (
               <div>
                 {chapter.lessons &&
                   chapter.lessons.map((lesson) => (
@@ -399,8 +400,8 @@ const CourseDetail = () => {
                             {lesson.type === "video"
                               ? "Video"
                               : lesson.type === "quiz"
-                              ? "Quiz"
-                              : "Document"}{" "}
+                                ? "Quiz"
+                                : "Document"}{" "}
                             • {lesson.duration || "15 mins"}{" "}
                             {lesson.total_questions
                               ? ` • ${lesson.total_questions} Questions`
@@ -412,7 +413,7 @@ const CourseDetail = () => {
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() =>
-                            handleOpenEditLesson(chapter.chapter_id, lesson)
+                            handleOpenEditLesson(chapter.chapterId, lesson)
                           }
                           className="flex items-center gap-1 px-3 py-1.5 bg-blue-500 hover:bg-blue-600 text-white rounded text-sm font-medium transition-colors"
                         >
@@ -424,8 +425,8 @@ const CourseDetail = () => {
                         <button
                           onClick={() =>
                             handleDeleteLesson(
-                              chapter.chapter_id,
-                              lesson.lesson_id
+                              chapter.chapterId,
+                              lesson.lessonId
                             )
                           }
                           className="p-1.5 bg-red-500 hover:bg-red-600 text-white rounded transition-colors"
@@ -441,14 +442,14 @@ const CourseDetail = () => {
 
                 <div className="p-4 flex flex-wrap gap-2 bg-white">
                   <button
-                    onClick={() => handleOpenAddLesson(chapter.chapter_id)}
+                    onClick={() => handleOpenAddLesson(chapter.chapterId)}
                     className="flex items-center gap-1 px-4 py-2 bg-[#3B82F6] hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors"
                   >
                     <DescriptionIcon fontSize="small" />
                     Thêm bài giảng
                   </button>
                   <button
-                    onClick={() => handleAddQuiz(chapter.chapter_id)}
+                    onClick={() => handleAddQuiz(chapter.chapterId)}
                     className="flex items-center gap-1 px-4 py-2 bg-[#3B82F6] hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors"
                   >
                     <QuizIcon fontSize="small" />

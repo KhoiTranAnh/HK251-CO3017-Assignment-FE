@@ -1,6 +1,6 @@
-import React from 'react';
 import { CourseCard } from '../Components/CourseCard';
 import { Pagination } from '../Components/Pagination';
+import popularCourseImg from "../../../assets/img/popular-course-img.png";
 
 export const CourseGrid = ({ courses, currentPage, totalPages, onPageChange }) => {
     // Hiển thị 3 courses mỗi trang
@@ -18,16 +18,16 @@ export const CourseGrid = ({ courses, currentPage, totalPages, onPageChange }) =
             <div className="grid grid-cols-3 gap-[30px]">
                 {currentCourses.map((course) => (
                     <CourseCard
-                        key={course.id}
-                        courseId={course.id}
-                        courseImgSource={course.courseImgSource}
-                        courseName={course.courseName}
-                        courseDescription={course.courseDescription}
-                        courseInstructor={course.courseInstructor}
-                        courseStar={course.courseStar}
-                        courseTag={course.courseTag}
-                        courseDuration={course.courseDuration}
-                        progress={course.progress}
+                        key={course.courseId}
+                        courseId={course.courseId}
+                        courseImgSource={popularCourseImg}
+                        courseName={course.title}
+                        courseDescription={course.description}
+                        courseInstructor={"Abc Def Ghi"}
+                        courseStar={5}
+                        courseTag={course.category}
+                        courseDuration={12}
+                        progress={0}
                     />
                 ))}
             </div>

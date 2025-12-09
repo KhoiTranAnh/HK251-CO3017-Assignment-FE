@@ -7,7 +7,7 @@ export const CourseCard = ({ course }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(`/instructor/courses/${course.course_id}`);
+    navigate(`/instructor/courses/${course.courseId}`);
   };
 
   // Helper to format mock stats
@@ -48,7 +48,7 @@ export const CourseCard = ({ course }) => {
           <div className="flex justify-between text-sm">
             <span className="text-gray-500">Mã khóa học</span>
             <span className="text-gray-900 uppercase">
-              {course.course_id.split("-")[0]}-401
+              {course.courseId}-401
             </span>{" "}
             {/* Mock suffix */}
           </div>

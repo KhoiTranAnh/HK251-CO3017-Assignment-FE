@@ -6,7 +6,7 @@ export const TestimonialCard = ({ rating, comment, studentCourse, studentName })
     let ratingStars = []
 
     for (let i = 0; i < rating; i++) {
-        ratingStars.push(<StarIcon sx={{ color: yellow[600] }} />)
+        ratingStars.push(<StarIcon key={i} sx={{ color: yellow[600] }} />)
     }
 
 

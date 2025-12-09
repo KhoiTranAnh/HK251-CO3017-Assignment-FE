@@ -34,7 +34,7 @@ export const FooterSection = () => {
     // ];
 
     return (
-        <footer className="w-full h-fit bg-gray-900 border-0 border-none py-20 px-20 flex flex-col gap-10">
+        <footer className="w-full h-fit bg-gray-900 border-0 border-none py-20 px-20 flex flex-col gap-10 grow-0 shrink-0">
             <div className="flex flex-row justify-around">
                 <div className="logo-socialMedia flex flex-col gap-3">
                     <Logo colorMode={"light"} size={"large"} />

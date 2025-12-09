@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Outlet, Link, useLocation } from "react-router-dom";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import BookIcon from "@mui/icons-material/Book";
@@ -6,16 +6,17 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { Button } from "../components/Button/Button";
 import { Logo } from "../components/Logo/Logo";
+import { cookieUtils } from "../utils/cookieUtils";
 
 const SidebarItem = ({ icon: Icon, label, to, active }) => (
   <Link
     to={to}
-    className={`flex items-center gap-3 px-4 py-3 rounded-lg mb-1 transition-colors ${
-      active
-        ? "bg-blue-50 text-blue-600 font-medium"
-        : "text-gray-600 hover:bg-gray-50"
-    }`}
+    className={`flex items-center gap-3 px-4 py-3 rounded-lg mb-1 transition-colors ${active
+      ? "bg-blue-50 text-blue-600 font-medium"
+      : "text-gray-600 hover:bg-gray-50"
+      }`}
   >
     <Icon className={active ? "text-blue-600" : "text-gray-400"} />
     <span>{label}</span>
@@ -25,6 +26,13 @@ const SidebarItem = ({ icon: Icon, label, to, active }) => (
 const InstructorLayout = () => {
   const location = useLocation();
   const isActive = (path) => location.pathname.includes(path);
+
+  const [userName, setUserName] = useState(cookieUtils.getCookie("userName"))
+
+  const handleLogOut = () => {
+    cookieUtils.resetCookies();
+    window.location.href = '/'
+  }
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -78,7 +86,7 @@ const InstructorLayout = () => {
             <div className="flex items-center gap-3 pl-4 border-l border-gray-200">
               <div className="text-right hidden sm:block">
                 <p className="text-sm font-medium text-gray-700">
-                  FirstName LastName
+                  {userName}
                 </p>
                 <p className="text-xs text-gray-500">Instructor</p>
               </div>
@@ -86,6 +94,7 @@ const InstructorLayout = () => {
                 className="text-gray-400 w-10 h-10"
                 fontSize="large"
               />
+              <Button variant='ghost' label='Đăng xuất' onClick={() => handleLogOut()} />
             </div>
           </div>
         </header>
