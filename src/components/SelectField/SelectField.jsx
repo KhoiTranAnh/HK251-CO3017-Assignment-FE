@@ -1,4 +1,4 @@
-export const SelectField = ({ hasLabel, label, mapValueOptionText }) => {
+export const SelectField = ({ hasLabel, label, mapValueOptionText, value, setValue }) => {
     let labelStyle = "label text-base w-full"
 
     if (!hasLabel) {
@@ -18,7 +18,7 @@ export const SelectField = ({ hasLabel, label, mapValueOptionText }) => {
 
         <div className={fieldStyle}>
 
-            <select className="w-full h-full rounded-lg px-2">
+            <select className="w-full h-full rounded-lg px-2" value={value} onChange={(e) => setValue(e.target.value)}>
                 {options}
             </select>
         </div>

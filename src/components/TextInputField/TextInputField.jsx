@@ -2,7 +2,7 @@ import EmailIcon from "../../assets/svg/email.svg"
 import LockIcon from "../../assets/svg/lock.svg"
 
 
-export const TextInputField = ({ hasLabel, label, value, placeholderValue, inputType, isError, errorMessage, hasIcon, iconName }) => {
+export const TextInputField = ({ hasLabel, label, value, placeholderValue, inputType, isError, errorMessage, hasIcon, iconName, onChangeHandle }) => {
     let labelStype = "label text-base w-full"
 
     if (!hasLabel) {
@@ -57,11 +57,10 @@ export const TextInputField = ({ hasLabel, label, value, placeholderValue, input
                 className="px-3 align-middle w-full h-full rounded-lg"
                 placeholder={placeholderValue}
                 value={value}
-
+                onChange={(e) => onChangeHandle(e.target.value)}
             />
-
-            <p className={errorStyle}>{errorMessage}</p>
         </div>
+        <p className={errorStyle}>{errorMessage}</p>
 
     </div>;
 }

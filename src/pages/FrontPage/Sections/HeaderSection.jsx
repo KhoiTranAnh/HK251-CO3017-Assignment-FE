@@ -1,7 +1,6 @@
 import React from "react";
 import { Logo } from "../../../components/Logo/Logo";
 import { Button } from "../../../components/Button/Button";
-
 // const navigationLinks = [
 //     { id: 1, label: "Khám phá" },
 //     { id: 2, label: "Về chúng tôi" },
@@ -80,18 +79,26 @@ import { Button } from "../../../components/Button/Button";
 //     );
 // };
 
-export const HeaderSection = ({ handleLoginButtonClick, handleSignUpButtonClick }) => {
+export const HeaderSection = ({ handleLoginButtonClick, handleSignUpButtonClick, isLogin, userName, handleLogOut }) => {
     return (
         <header className="flex flex-row h-[70px] w-full items-center px-5 py-2 justify-between grow-0 shrink-0">
             <div className="header-left flex flex-row h-fit w-fit gap-2 ">
                 <Logo />
+                {isLogin && <Button variant='ghost' label='Dashboard' />}
                 <Button variant='ghost' label='Khám phá' />
                 <Button variant='ghost' label='Về chúng tôi' />
                 <Button variant='ghost' label='Liên hệ' />
             </div>
             <div className="header-right flex flex-row h-fit w-fit gap-2">
-                <Button variant='ghost' label='Đăng nhập' onClick={() => handleLoginButtonClick()} />
-                <Button variant='primary' label='Đăng ký' onClick={() => handleSignUpButtonClick()} />
+                {isLogin ?
+                    (<>
+                        <Button variant='ghost' label={userName} />
+                        <Button variant='ghost' label='Đăng xuất' onClick={() => handleLogOut()} />
+                    </>) : (<>
+                        <Button variant='ghost' label='Đăng nhập' onClick={() => handleLoginButtonClick()} />
+                        <Button variant='primary' label='Đăng ký' onClick={() => handleSignUpButtonClick()} />
+                    </>)}
+
             </div>
         </header>
     )
